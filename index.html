@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CGPA & Attendance Calculator</title>
+    <title>Academic Calculator & Kerala Holidays</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -19,7 +18,6 @@
             display: flex;
             flex-direction: column;
         }
-
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -29,25 +27,21 @@
             overflow: hidden;
             flex: 1;
         }
-
         .header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 30px;
             text-align: center;
         }
-
         .header h1 {
             font-size: 2.5rem;
             margin-bottom: 10px;
             font-weight: 700;
         }
-
         .header p {
             opacity: 0.9;
             font-size: 1.1rem;
         }
-
         .tab-container {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
@@ -55,12 +49,11 @@
             padding: 0 30px;
             gap: 5px;
         }
-
         .tab-btn {
             background: rgba(255,255,255,0.1);
             color: white;
             border: none;
-            padding: 15px 30px;
+            padding: 15px 25px;
             cursor: pointer;
             border-radius: 10px 10px 0 0;
             font-size: 1rem;
@@ -68,27 +61,22 @@
             transition: all 0.3s;
             backdrop-filter: blur(10px);
         }
-
         .tab-btn.active {
             background: white;
             color: #667eea;
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
-
         .tab-btn:hover:not(.active) {
             background: rgba(255,255,255,0.2);
         }
-
         .tab-content {
             display: none;
             min-height: 600px;
         }
-
         .tab-content.active {
             display: block;
         }
-
         .formula-box {
             background: rgba(255,255,255,0.1);
             padding: 15px;
@@ -97,32 +85,27 @@
             backdrop-filter: blur(10px);
             text-align: center;
         }
-
         .main-content {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 0;
             min-height: 600px;
         }
-
         .input-section {
             padding: 30px;
             background: #f8f9fa;
             border-right: 1px solid #e9ecef;
         }
-
         .result-section {
             padding: 30px;
             background: white;
         }
-
         .section-title {
             font-size: 1.5rem;
             font-weight: 600;
             margin-bottom: 20px;
             color: #333;
         }
-
         .semester-card {
             background: white;
             border: 1px solid #e9ecef;
@@ -131,19 +114,16 @@
             margin-bottom: 15px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
-
         .semester-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
         }
-
         .semester-title {
             font-weight: 600;
             color: #495057;
         }
-
         .delete-btn {
             background: #dc3545;
             color: white;
@@ -153,50 +133,42 @@
             cursor: pointer;
             font-size: 0.8rem;
         }
-
         .delete-btn:hover {
             background: #c82333;
         }
-
         .input-group {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 15px;
         }
-
         .input-field {
             display: flex;
             flex-direction: column;
         }
-
         .input-field label {
             font-weight: 500;
             margin-bottom: 5px;
             color: #495057;
         }
-
-        .input-field input {
+        .input-field input, .input-field select {
             padding: 12px;
             border: 1px solid #ced4da;
             border-radius: 8px;
             font-size: 1rem;
             transition: all 0.3s;
         }
-
-        .input-field input:focus {
+        .input-field input:focus, .input-field select:focus {
             outline: none;
             border-color: #667eea;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
             transform: translateY(-1px);
         }
-
         .button-group {
             display: flex;
             gap: 10px;
             margin-top: 20px;
             flex-wrap: wrap;
         }
-
         .btn {
             padding: 12px 20px;
             border: none;
@@ -208,7 +180,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .btn::before {
             content: '';
             position: absolute;
@@ -221,52 +192,42 @@
             transition: all 0.3s;
             transform: translate(-50%, -50%);
         }
-
         .btn:hover::before {
             width: 300px;
             height: 300px;
         }
-
         .btn-primary {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
         }
-
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
         }
-
         .btn-success {
             background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
             color: white;
         }
-
         .btn-success:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
         }
-
         .btn-secondary {
             background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
             color: white;
         }
-
         .btn-secondary:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(108, 117, 125, 0.3);
         }
-
         .btn-warning {
             background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
             color: white;
         }
-
         .btn-warning:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(255, 193, 7, 0.3);
         }
-
         .result-card {
             background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
             color: white;
@@ -277,7 +238,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .result-card::before {
             content: '';
             position: absolute;
@@ -288,12 +248,10 @@
             background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
             animation: shine 3s infinite;
         }
-
         @keyframes shine {
             0% { transform: translateX(-100%) translateY(-100%) rotate(30deg); }
             100% { transform: translateX(100%) translateY(100%) rotate(30deg); }
         }
-
         .result-card h3 {
             font-size: 1.2rem;
             margin-bottom: 10px;
@@ -301,7 +259,6 @@
             position: relative;
             z-index: 1;
         }
-
         .result-card .value {
             font-size: 3rem;
             font-weight: 700;
@@ -309,28 +266,24 @@
             position: relative;
             z-index: 1;
         }
-
         .result-card .scale-info {
             opacity: 0.8;
             font-size: 0.9rem;
             position: relative;
             z-index: 1;
         }
-
         .scaling-section {
             background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             padding: 20px;
             border-radius: 10px;
             margin-bottom: 20px;
         }
-
         .scaling-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 15px;
             margin-bottom: 15px;
         }
-
         .scale-card {
             background: white;
             padding: 20px;
@@ -339,44 +292,37 @@
             text-align: center;
             transition: all 0.3s;
         }
-
         .scale-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
         }
-
         .scale-title {
             font-weight: 600;
             color: #6f42c1;
             margin-bottom: 10px;
         }
-
         .scale-value {
             font-size: 1.8rem;
             font-weight: 700;
             color: #495057;
             margin-bottom: 8px;
         }
-
         .scale-formula {
             font-size: 0.8rem;
             color: #6c757d;
         }
-
         .calculation-details {
             background: #f8f9fa;
             padding: 20px;
             border-radius: 10px;
             margin-bottom: 20px;
         }
-
         .calculation-row {
             display: flex;
             justify-content: space-between;
             padding: 10px 0;
             border-bottom: 1px solid #e9ecef;
         }
-
         .calculation-row:last-child {
             border-bottom: none;
             font-weight: 600;
@@ -384,20 +330,17 @@
             border-top: 2px solid #dee2e6;
             padding-top: 15px;
         }
-
         .grade-classification {
             background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
             padding: 20px;
             border-radius: 10px;
         }
-
         .grade-item {
             padding: 8px 15px;
             margin: 5px 0;
             border-radius: 5px;
             transition: all 0.3s;
         }
-
         .grade-item.active {
             font-weight: 700;
             color: white;
@@ -405,44 +348,36 @@
             transform: scale(1.05);
             box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
         }
-
         .empty-state {
             text-align: center;
             padding: 60px 20px;
             color: #6c757d;
         }
-
         .empty-state svg {
             width: 80px;
             height: 80px;
             margin-bottom: 20px;
             opacity: 0.3;
         }
-
         .semesters-container {
             max-height: 400px;
             overflow-y: auto;
             margin-bottom: 20px;
         }
-
         .semesters-container::-webkit-scrollbar {
             width: 8px;
         }
-
         .semesters-container::-webkit-scrollbar-track {
             background: #f1f1f1;
             border-radius: 4px;
         }
-
         .semesters-container::-webkit-scrollbar-thumb {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border-radius: 4px;
         }
-
         .semesters-container::-webkit-scrollbar-thumb:hover {
             background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
         }
-
         .error-message {
             background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
             color: #721c24;
@@ -451,7 +386,6 @@
             border: 1px solid #f5c6cb;
             margin-bottom: 20px;
         }
-
         .success-message {
             background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
             color: #155724;
@@ -460,7 +394,6 @@
             border: 1px solid #c3e6cb;
             margin-bottom: 20px;
         }
-
         .warning-message {
             background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
             color: #856404;
@@ -469,21 +402,18 @@
             border: 1px solid #ffeaa7;
             margin-bottom: 20px;
         }
-
         .attendance-input-section {
             background: #f8f9fa;
             padding: 30px;
             border-radius: 10px;
             margin-bottom: 20px;
         }
-
         .attendance-stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
             margin-bottom: 20px;
         }
-
         .stat-card {
             background: white;
             padding: 20px;
@@ -492,25 +422,21 @@
             border: 1px solid #e9ecef;
             transition: all 0.3s;
         }
-
         .stat-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
         }
-
         .stat-value {
             font-size: 2rem;
             font-weight: 700;
             color: #667eea;
             margin-bottom: 5px;
         }
-
         .stat-label {
             color: #6c757d;
             font-size: 0.9rem;
             font-weight: 500;
         }
-
         .progress-bar {
             background: #e9ecef;
             height: 20px;
@@ -518,7 +444,6 @@
             overflow: hidden;
             margin: 10px 0;
         }
-
         .progress-fill {
             height: 100%;
             background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
@@ -526,13 +451,147 @@
             transition: width 0.5s ease;
             position: relative;
         }
-
         .progress-fill.danger {
             background: linear-gradient(90deg, #dc3545 0%, #fd7e14 100%);
         }
-
         .progress-fill.warning {
             background: linear-gradient(90deg, #ffc107 0%, #fd7e14 100%);
+        }
+
+        /* Holiday Styles */
+        .holidays-content {
+            padding: 30px;
+        }
+        .holiday-filters {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .filter-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .search-box {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        .holidays-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .holiday-card {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .holiday-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+        .holiday-card.upcoming {
+            border-left: 5px solid #28a745;
+        }
+        .holiday-card.today {
+            border-left: 5px solid #dc3545;
+            background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+        }
+        .holiday-card.past {
+            opacity: 0.7;
+            border-left: 5px solid #6c757d;
+        }
+        .holiday-date {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+        .holiday-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .holiday-type {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+        .holiday-type.national {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .holiday-type.state {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+        }
+        .holiday-type.religious {
+            background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+            color: white;
+        }
+        .holiday-type.festival {
+            background: linear-gradient(135deg, #e83e8c 0%, #fd7e14 100%);
+            color: white;
+        }
+        .holiday-description {
+            color: #6c757d;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+        .holiday-countdown {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #28a745;
+        }
+        .next-holiday-banner {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .next-holiday-banner h3 {
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+        .next-holiday-banner .holiday-name {
+            color: white;
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+        .next-holiday-banner .countdown {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        .month-section {
+            margin-bottom: 30px;
+        }
+        .month-header {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #495057;
+            border-left: 5px solid #667eea;
         }
 
         .footer {
@@ -542,54 +601,52 @@
             padding: 20px;
             margin-top: auto;
         }
-
         .footer p {
             margin: 0;
             font-size: 0.9rem;
             opacity: 0.8;
         }
-
         @media (max-width: 768px) {
             .main-content {
                 grid-template-columns: 1fr;
             }
-            
+            .holidays-content {
+                padding: 20px;
+            }
             .input-section {
                 border-right: none;
                 border-bottom: 1px solid #e9ecef;
             }
-            
             .header h1 {
                 font-size: 2rem;
             }
-            
             .scaling-grid {
                 grid-template-columns: 1fr;
             }
-
             .tab-container {
                 flex-direction: column;
                 gap: 0;
             }
-
             .tab-btn {
                 border-radius: 0;
                 border-bottom: 1px solid rgba(255,255,255,0.1);
             }
-
             .tab-btn.active {
                 transform: none;
             }
-
             .button-group {
                 flex-direction: column;
             }
-
             .btn {
                 width: 100%;
             }
-
             .attendance-stats {
+                grid-template-columns: 1fr;
+            }
+            .holidays-grid {
+                grid-template-columns: 1fr;
+            }
+            .filter-group {
                 grid-template-columns: 1fr;
             }
         }
@@ -599,12 +656,12 @@
     <div class="container">
         <div class="header">
             <h1>Academic Calculator</h1>
-            <p>Calculate your CGPA and track your attendance in one place</p>
+            <p>Calculate your CGPA, track attendance, and view Kerala public holidays</p>
         </div>
-
         <div class="tab-container">
             <button class="tab-btn active" onclick="switchTab('cgpa')">CGPA Calculator</button>
             <button class="tab-btn" onclick="switchTab('attendance')">Attendance Tracker</button>
+            <button class="tab-btn" onclick="switchTab('holidays')">Kerala Holidays</button>
         </div>
 
         <!-- CGPA Calculator Tab -->
@@ -634,14 +691,12 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="button-group">
                         <button class="btn btn-primary" onclick="addSemester()">+ Add Semester</button>
                         <button class="btn btn-success" onclick="calculateCGPA()">Calculate CGPA</button>
                         <button class="btn btn-secondary" onclick="resetCGPACalculator()">Reset</button>
                     </div>
                 </div>
-
                 <div class="result-section">
                     <h2 class="section-title">Results</h2>
                     <div id="cgpaResultsContainer">
@@ -689,14 +744,12 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="button-group">
                         <button class="btn btn-success" onclick="calculateAttendance()">Calculate Attendance</button>
                         <button class="btn btn-warning" onclick="addAttendanceRecord()">Save Record</button>
                         <button class="btn btn-secondary" onclick="resetAttendanceCalculator()">Reset</button>
                     </div>
                 </div>
-
                 <div class="result-section">
                     <h2 class="section-title">Attendance Status</h2>
                     <div id="attendanceResultsContainer">
@@ -710,6 +763,57 @@
                 </div>
             </div>
         </div>
+
+        <!-- Kerala Holidays Tab -->
+        <div id="holidays-tab" class="tab-content">
+            <div class="holidays-content">
+                <div class="next-holiday-banner" id="nextHolidayBanner">
+                    <h3>🎉 Next Holiday</h3>
+                    <div class="holiday-name" id="nextHolidayName">Loading...</div>
+                    <div class="countdown" id="nextHolidayCountdown">Calculating...</div>
+                </div>
+
+                <div class="holiday-filters">
+                    <div class="filter-group">
+                        <div class="input-field">
+                            <label>Filter by Month</label>
+                            <select id="monthFilter" onchange="filterHolidays()">
+                                <option value="">All Months</option>
+                                <option value="0">January</option>
+                                <option value="1">February</option>
+                                <option value="2">March</option>
+                                <option value="3">April</option>
+                                <option value="4">May</option>
+                                <option value="5">June</option>
+                                <option value="6">July</option>
+                                <option value="7">August</option>
+                                <option value="8">September</option>
+                                <option value="9">October</option>
+                                <option value="10">November</option>
+                                <option value="11">December</option>
+                            </select>
+                        </div>
+                        <div class="input-field">
+                            <label>Filter by Type</label>
+                            <select id="typeFilter" onchange="filterHolidays()">
+                                <option value="">All Types</option>
+                                <option value="national">National</option>
+                                <option value="state">State</option>
+                                <option value="religious">Religious</option>
+                                <option value="festival">Festival</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-field">
+                        <input type="text" id="searchBox" class="search-box" placeholder="Search holidays..." oninput="filterHolidays()">
+                    </div>
+                </div>
+
+                <div id="holidaysContainer">
+                    <!-- Holidays will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
     </div>
 
     <footer class="footer">
@@ -719,6 +823,148 @@
     <script>
         let semesterCount = 1;
         let attendanceRecords = [];
+
+        // Kerala Holidays Data for 2025
+        const keralaHolidays2025 = [
+            {
+                date: '2025-01-01',
+                name: 'New Year\'s Day',
+                type: 'national',
+                description: 'The first day of the Gregorian calendar year, celebrated worldwide.'
+            },
+            {
+                date: '2025-01-14',
+                name: 'Makar Sankranti',
+                type: 'religious',
+                description: 'Hindu festival marking the transition of the sun into Capricorn.'
+            },
+            {
+                date: '2025-01-26',
+                name: 'Republic Day',
+                type: 'national',
+                description: 'Commemorates the adoption of the Constitution of India.'
+            },
+            {
+                date: '2025-02-26',
+                name: 'Maha Shivratri',
+                type: 'religious',
+                description: 'Hindu festival dedicated to Lord Shiva.'
+            },
+            {
+                date: '2025-03-13',
+                name: 'Holi',
+                type: 'festival',
+                description: 'Festival of colors, celebrating the arrival of spring.'
+            },
+            {
+                date: '2025-03-31',
+                name: 'Eid ul-Fitr',
+                type: 'religious',
+                description: 'Islamic festival marking the end of Ramadan.'
+            },
+            {
+                date: '2025-04-13',
+                name: 'Vishu',
+                type: 'state',
+                description: 'Malayalam New Year, celebrated with traditional rituals and feasts.'
+            },
+            {
+                date: '2025-04-14',
+                name: 'Good Friday',
+                type: 'religious',
+                description: 'Christian observance commemorating the crucifixion of Jesus Christ.'
+            },
+            {
+                date: '2025-04-18',
+                name: 'Ram Navami',
+                type: 'religious',
+                description: 'Hindu festival celebrating the birth of Lord Rama.'
+            },
+            {
+                date: '2025-05-01',
+                name: 'Labour Day',
+                type: 'national',
+                description: 'International Workers\' Day, celebrating laborers and the working class.'
+            },
+            {
+                date: '2025-05-12',
+                name: 'Buddha Purnima',
+                type: 'religious',
+                description: 'Buddhist festival commemorating the birth of Gautama Buddha.'
+            },
+            {
+                date: '2025-06-07',
+                name: 'Eid ul-Adha',
+                type: 'religious',
+                description: 'Islamic festival commemorating Abraham\'s willingness to sacrifice his son.'
+            },
+            {
+                date: '2025-07-06',
+                name: 'Muharram',
+                type: 'religious',
+                description: 'Islamic New Year, marking the beginning of the Islamic calendar.'
+            },
+            {
+                date: '2025-08-15',
+                name: 'Independence Day',
+                type: 'national',
+                description: 'Commemorates India\'s independence from British rule in 1947.'
+            },
+            {
+                date: '2025-08-16',
+                name: 'Janmashtami',
+                type: 'religious',
+                description: 'Hindu festival celebrating the birth of Lord Krishna.'
+            },
+            {
+                date: '2025-09-05',
+                name: 'Onam (Thiruvonam)',
+                type: 'state',
+                description: 'Kerala\'s most important festival, celebrating King Mahabali\'s return.'
+            },
+            {
+                date: '2025-09-07',
+                name: 'Ganesh Chaturthi',
+                type: 'religious',
+                description: 'Hindu festival celebrating the birth of Lord Ganesha.'
+            },
+            {
+                date: '2025-10-02',
+                name: 'Gandhi Jayanti',
+                type: 'national',
+                description: 'Birthday of Mahatma Gandhi, the Father of the Nation.'
+            },
+            {
+                date: '2025-10-20',
+                name: 'Dussehra',
+                type: 'religious',
+                description: 'Hindu festival celebrating the victory of good over evil.'
+            },
+            {
+                date: '2025-11-01',
+                name: 'Kerala Piravi',
+                type: 'state',
+                description: 'Kerala Formation Day, commemorating the formation of Kerala state.'
+            },
+            {
+                date: '2025-11-09',
+                name: 'Diwali',
+                type: 'festival',
+                description: 'Festival of lights, one of the most important Hindu festivals.'
+            },
+            {
+                date: '2025-11-15',
+                name: 'Guru Nanak Jayanti',
+                type: 'religious',
+                description: 'Birthday of Guru Nanak, the founder of Sikhism.'
+            },
+            {
+                date: '2025-12-25',
+                name: 'Christmas Day',
+                type: 'religious',
+                description: 'Christian festival celebrating the birth of Jesus Christ.'
+            }
+        ];
 
         function switchTab(tabName) {
             // Hide all tab contents
@@ -736,6 +982,11 @@
             
             // Add active class to clicked button
             event.target.classList.add('active');
+
+            // Initialize holidays if switching to holidays tab
+            if (tabName === 'holidays') {
+                initializeHolidays();
+            }
         }
 
         // CGPA Calculator Functions
@@ -1174,6 +1425,217 @@
             `;
         }
 
+        // Holiday Functions
+        function initializeHolidays() {
+            displayHolidays();
+            updateNextHoliday();
+        }
+
+        function displayHolidays() {
+            const container = document.getElementById('holidaysContainer');
+            const today = new Date();
+            
+            // Group holidays by month
+            const holidaysByMonth = {};
+            const monthNames = [
+                'January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'
+            ];
+
+            keralaHolidays2025.forEach(holiday => {
+                const holidayDate = new Date(holiday.date);
+                const month = holidayDate.getMonth();
+                
+                if (!holidaysByMonth[month]) {
+                    holidaysByMonth[month] = [];
+                }
+                
+                holidaysByMonth[month].push({
+                    ...holiday,
+                    dateObj: holidayDate,
+                    isPast: holidayDate < today,
+                    isToday: holidayDate.toDateString() === today.toDateString(),
+                    isUpcoming: holidayDate > today
+                });
+            });
+
+            let html = '';
+            
+            // Display holidays month by month
+            Object.keys(holidaysByMonth).sort((a, b) => parseInt(a) - parseInt(b)).forEach(month => {
+                const monthIndex = parseInt(month);
+                const holidays = holidaysByMonth[month];
+                
+                html += `
+                    <div class="month-section">
+                        <div class="month-header">${monthNames[monthIndex]} 2025</div>
+                        <div class="holidays-grid">
+                `;
+                
+                holidays.forEach(holiday => {
+                    const cardClass = holiday.isToday ? 'today' : (holiday.isUpcoming ? 'upcoming' : 'past');
+                    const countdown = holiday.isUpcoming ? getCountdown(holiday.dateObj) : '';
+                    
+                    html += `
+                        <div class="holiday-card ${cardClass}">
+                            <div class="holiday-date">${formatDate(holiday.dateObj)}</div>
+                            <div class="holiday-name">${holiday.name}</div>
+                            <div class="holiday-type ${holiday.type}">${holiday.type.charAt(0).toUpperCase() + holiday.type.slice(1)}</div>
+                            <div class="holiday-description">${holiday.description}</div>
+                            ${countdown ? `<div class="holiday-countdown">${countdown}</div>` : ''}
+                        </div>
+                    `;
+                });
+                
+                html += `
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        function updateNextHoliday() {
+            const today = new Date();
+            const upcomingHolidays = keralaHolidays2025
+                .map(holiday => ({
+                    ...holiday,
+                    dateObj: new Date(holiday.date)
+                }))
+                .filter(holiday => holiday.dateObj >= today)
+                .sort((a, b) => a.dateObj - b.dateObj);
+
+            if (upcomingHolidays.length > 0) {
+                const nextHoliday = upcomingHolidays[0];
+                document.getElementById('nextHolidayName').textContent = nextHoliday.name;
+                document.getElementById('nextHolidayCountdown').textContent = getCountdown(nextHoliday.dateObj);
+            } else {
+                document.getElementById('nextHolidayName').textContent = 'No upcoming holidays';
+                document.getElementById('nextHolidayCountdown').textContent = 'Check back next year!';
+            }
+        }
+
+        function getCountdown(targetDate) {
+            const now = new Date();
+            const diff = targetDate - now;
+            
+            if (diff <= 0) return 'Today!';
+            
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            
+            if (days > 0) {
+                return `${days} day${days > 1 ? 's' : ''} remaining`;
+            } else if (hours > 0) {
+                return `${hours} hour${hours > 1 ? 's' : ''} remaining`;
+            } else {
+                return 'Less than an hour remaining';
+            }
+        }
+
+        function formatDate(date) {
+            const options = { 
+                weekday: 'short', 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric' 
+            };
+            return date.toLocaleDateString('en-IN', options);
+        }
+
+        function filterHolidays() {
+            const monthFilter = document.getElementById('monthFilter').value;
+            const typeFilter = document.getElementById('typeFilter').value;
+            const searchTerm = document.getElementById('searchBox').value.toLowerCase();
+            
+            const container = document.getElementById('holidaysContainer');
+            const today = new Date();
+            
+            let filteredHolidays = keralaHolidays2025.filter(holiday => {
+                const holidayDate = new Date(holiday.date);
+                const matchesMonth = !monthFilter || holidayDate.getMonth() == monthFilter;
+                const matchesType = !typeFilter || holiday.type === typeFilter;
+                const matchesSearch = !searchTerm || 
+                    holiday.name.toLowerCase().includes(searchTerm) ||
+                    holiday.description.toLowerCase().includes(searchTerm);
+                
+                return matchesMonth && matchesType && matchesSearch;
+            });
+
+            if (filteredHolidays.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
+                        <p>No holidays found matching your criteria</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Group filtered holidays by month
+            const holidaysByMonth = {};
+            const monthNames = [
+                'January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'
+            ];
+
+            filteredHolidays.forEach(holiday => {
+                const holidayDate = new Date(holiday.date);
+                const month = holidayDate.getMonth();
+                
+                if (!holidaysByMonth[month]) {
+                    holidaysByMonth[month] = [];
+                }
+                
+                holidaysByMonth[month].push({
+                    ...holiday,
+                    dateObj: holidayDate,
+                    isPast: holidayDate < today,
+                    isToday: holidayDate.toDateString() === today.toDateString(),
+                    isUpcoming: holidayDate > today
+                });
+            });
+
+            let html = '';
+            
+            // Display filtered holidays
+            Object.keys(holidaysByMonth).sort((a, b) => parseInt(a) - parseInt(b)).forEach(month => {
+                const monthIndex = parseInt(month);
+                const holidays = holidaysByMonth[month];
+                
+                html += `
+                    <div class="month-section">
+                        <div class="month-header">${monthNames[monthIndex]} 2025</div>
+                        <div class="holidays-grid">
+                `;
+                
+                holidays.forEach(holiday => {
+                    const cardClass = holiday.isToday ? 'today' : (holiday.isUpcoming ? 'upcoming' : 'past');
+                    const countdown = holiday.isUpcoming ? getCountdown(holiday.dateObj) : '';
+                    
+                    html += `
+                        <div class="holiday-card ${cardClass}">
+                            <div class="holiday-date">${formatDate(holiday.dateObj)}</div>
+                            <div class="holiday-name">${holiday.name}</div>
+                            <div class="holiday-type ${holiday.type}">${holiday.type.charAt(0).toUpperCase() + holiday.type.slice(1)}</div>
+                            <div class="holiday-description">${holiday.description}</div>
+                            ${countdown ? `<div class="holiday-countdown">${countdown}</div>` : ''}
+                        </div>
+                    `;
+                });
+                
+                html += `
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
         // Auto-calculate attendance when inputs change
         document.addEventListener('DOMContentLoaded', function() {
             const attendanceInputs = ['attendedClasses', 'totalClasses', 'minPercent'];
@@ -1188,6 +1650,9 @@
                     });
                 }
             });
+
+            // Update next holiday countdown every minute
+            setInterval(updateNextHoliday, 60000);
         });
     </script>
 </body>
