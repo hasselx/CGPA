@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CGPA Calculator</title>
+    <title>CGPA & Attendance Calculator</title>
     <style>
         * {
             margin: 0;
@@ -16,6 +16,8 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
+            display: flex;
+            flex-direction: column;
         }
 
         .container {
@@ -25,6 +27,7 @@
             border-radius: 20px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             overflow: hidden;
+            flex: 1;
         }
 
         .header {
@@ -45,12 +48,54 @@
             font-size: 1.1rem;
         }
 
+        .tab-container {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            padding: 0 30px;
+            gap: 5px;
+        }
+
+        .tab-btn {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            cursor: pointer;
+            border-radius: 10px 10px 0 0;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .tab-btn:hover:not(.active) {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .tab-content {
+            display: none;
+            min-height: 600px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
         .formula-box {
             background: rgba(255,255,255,0.1);
             padding: 15px;
             border-radius: 10px;
             margin-top: 20px;
             backdrop-filter: blur(10px);
+            text-align: center;
         }
 
         .main-content {
@@ -131,23 +176,25 @@
         }
 
         .input-field input {
-            padding: 10px;
+            padding: 12px;
             border: 1px solid #ced4da;
-            border-radius: 5px;
+            border-radius: 8px;
             font-size: 1rem;
-            transition: border-color 0.3s;
+            transition: all 0.3s;
         }
 
         .input-field input:focus {
             outline: none;
             border-color: #667eea;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-1px);
         }
 
         .button-group {
             display: flex;
             gap: 10px;
             margin-top: 20px;
+            flex-wrap: wrap;
         }
 
         .btn {
@@ -158,36 +205,66 @@
             font-size: 1rem;
             font-weight: 500;
             transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            transition: all 0.3s;
+            transform: translate(-50%, -50%);
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
         }
 
         .btn-primary {
-            background: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
         }
 
         .btn-primary:hover {
-            background: #5a67d8;
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
         }
 
         .btn-success {
-            background: #28a745;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
             color: white;
         }
 
         .btn-success:hover {
-            background: #218838;
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
         }
 
         .btn-secondary {
-            background: #6c757d;
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
             color: white;
         }
 
         .btn-secondary:hover {
-            background: #5a6268;
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108, 117, 125, 0.3);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 193, 7, 0.3);
         }
 
         .result-card {
@@ -197,27 +274,51 @@
             border-radius: 15px;
             text-align: center;
             margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(30deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(30deg); }
         }
 
         .result-card h3 {
             font-size: 1.2rem;
             margin-bottom: 10px;
             opacity: 0.9;
+            position: relative;
+            z-index: 1;
         }
 
-        .result-card .cgpa-value {
+        .result-card .value {
             font-size: 3rem;
             font-weight: 700;
             margin-bottom: 5px;
+            position: relative;
+            z-index: 1;
         }
 
         .result-card .scale-info {
             opacity: 0.8;
             font-size: 0.9rem;
+            position: relative;
+            z-index: 1;
         }
 
         .scaling-section {
-            background: #f8f9fa;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             padding: 20px;
             border-radius: 10px;
             margin-bottom: 20px;
@@ -232,23 +333,29 @@
 
         .scale-card {
             background: white;
-            padding: 15px;
-            border-radius: 8px;
+            padding: 20px;
+            border-radius: 10px;
             border: 1px solid #e9ecef;
             text-align: center;
+            transition: all 0.3s;
+        }
+
+        .scale-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
         }
 
         .scale-title {
             font-weight: 600;
             color: #6f42c1;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
         }
 
         .scale-value {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 700;
             color: #495057;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
         }
 
         .scale-formula {
@@ -266,7 +373,7 @@
         .calculation-row {
             display: flex;
             justify-content: space-between;
-            padding: 8px 0;
+            padding: 10px 0;
             border-bottom: 1px solid #e9ecef;
         }
 
@@ -275,26 +382,28 @@
             font-weight: 600;
             font-size: 1.1rem;
             border-top: 2px solid #dee2e6;
-            padding-top: 12px;
+            padding-top: 15px;
         }
 
         .grade-classification {
-            background: #e3f2fd;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
             padding: 20px;
             border-radius: 10px;
         }
 
         .grade-item {
-            padding: 5px 0;
+            padding: 8px 15px;
+            margin: 5px 0;
+            border-radius: 5px;
             transition: all 0.3s;
         }
 
         .grade-item.active {
             font-weight: 700;
-            color: #28a745;
-            background: rgba(40, 167, 69, 0.1);
-            padding: 8px 12px;
-            border-radius: 5px;
+            color: white;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
         }
 
         .empty-state {
@@ -317,29 +426,127 @@
         }
 
         .semesters-container::-webkit-scrollbar {
-            width: 6px;
+            width: 8px;
         }
 
         .semesters-container::-webkit-scrollbar-track {
             background: #f1f1f1;
-            border-radius: 3px;
+            border-radius: 4px;
         }
 
         .semesters-container::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
-            border-radius: 3px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 4px;
         }
 
         .semesters-container::-webkit-scrollbar-thumb:hover {
-            background: #a8a8a8;
+            background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
         }
 
         .error-message {
-            background: #f8d7da;
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
             color: #721c24;
             padding: 15px;
             border-radius: 8px;
             border: 1px solid #f5c6cb;
+            margin-bottom: 20px;
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #c3e6cb;
+            margin-bottom: 20px;
+        }
+
+        .warning-message {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ffeaa7;
+            margin-bottom: 20px;
+        }
+
+        .attendance-input-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .attendance-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .progress-bar {
+            background: #e9ecef;
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+
+        .progress-fill.danger {
+            background: linear-gradient(90deg, #dc3545 0%, #fd7e14 100%);
+        }
+
+        .progress-fill.warning {
+            background: linear-gradient(90deg, #ffc107 0%, #fd7e14 100%);
+        }
+
+        .footer {
+            background: linear-gradient(135deg, #495057 0%, #343a40 100%);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: auto;
+        }
+
+        .footer p {
+            margin: 0;
+            font-size: 0.9rem;
+            opacity: 0.8;
         }
 
         @media (max-width: 768px) {
@@ -359,65 +566,179 @@
             .scaling-grid {
                 grid-template-columns: 1fr;
             }
+
+            .tab-container {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .tab-btn {
+                border-radius: 0;
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+            }
+
+            .tab-btn.active {
+                transform: none;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .attendance-stats {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>CGPA Calculator</h1>
-            <p>Calculate your Cumulative Grade Point Average using weighted formula</p>
-            <div class="formula-box">
-                <strong>Formula:</strong> CGPA = Σ(SGPA × Credits) / Σ(Credits)
-            </div>
+            <h1>Academic Calculator</h1>
+            <p>Calculate your CGPA and track your attendance in one place</p>
         </div>
 
-        <div class="main-content">
-            <div class="input-section">
-                <h2 class="section-title">Enter Semester Details</h2>
-                
-                <div class="semesters-container" id="semestersContainer">
-                    <div class="semester-card" data-id="1">
-                        <div class="semester-header">
-                            <span class="semester-title">Semester 1</span>
-                        </div>
-                        <div class="input-group">
-                            <div class="input-field">
-                                <label>SGPA</label>
-                                <input type="number" step="0.01" min="0" max="10" placeholder="e.g., 8.37" class="sgpa-input">
+        <div class="tab-container">
+            <button class="tab-btn active" onclick="switchTab('cgpa')">CGPA Calculator</button>
+            <button class="tab-btn" onclick="switchTab('attendance')">Attendance Tracker</button>
+        </div>
+
+        <!-- CGPA Calculator Tab -->
+        <div id="cgpa-tab" class="tab-content active">
+            <div class="formula-box">
+                <strong>CGPA Formula:</strong> CGPA = Σ(SGPA × Credits) / Σ(Credits)
+            </div>
+            
+            <div class="main-content">
+                <div class="input-section">
+                    <h2 class="section-title">Enter Semester Details</h2>
+                    
+                    <div class="semesters-container" id="semestersContainer">
+                        <div class="semester-card" data-id="1">
+                            <div class="semester-header">
+                                <span class="semester-title">Semester 1</span>
                             </div>
-                            <div class="input-field">
-                                <label>Credits</label>
-                                <input type="number" step="1" min="0" placeholder="e.g., 23" class="credits-input">
+                            <div class="input-group">
+                                <div class="input-field">
+                                    <label>SGPA</label>
+                                    <input type="number" step="0.01" min="0" max="10" placeholder="e.g., 8.37" class="sgpa-input">
+                                </div>
+                                <div class="input-field">
+                                    <label>Credits</label>
+                                    <input type="number" step="1" min="0" placeholder="e.g., 23" class="credits-input">
+                                </div>
                             </div>
                         </div>
                     </div>
+
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="addSemester()">+ Add Semester</button>
+                        <button class="btn btn-success" onclick="calculateCGPA()">Calculate CGPA</button>
+                        <button class="btn btn-secondary" onclick="resetCGPACalculator()">Reset</button>
+                    </div>
                 </div>
 
-                <div class="button-group">
-                    <button class="btn btn-primary" onclick="addSemester()">+ Add Semester</button>
-                    <button class="btn btn-success" onclick="calculateCGPA()">Calculate CGPA</button>
-                    <button class="btn btn-secondary" onclick="resetCalculator()">Reset</button>
+                <div class="result-section">
+                    <h2 class="section-title">Results</h2>
+                    <div id="cgpaResultsContainer">
+                        <div class="empty-state">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                            </svg>
+                            <p>Enter your semester details and click "Calculate CGPA" to see your results</p>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
 
-            <div class="result-section">
-                <h2 class="section-title">Results</h2>
-                <div id="resultsContainer">
-                    <div class="empty-state">
-                        <svg viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
-                        </svg>
-                        <p>Enter your semester details and click "Calculate CGPA" to see your results</p>
+        <!-- Attendance Tracker Tab -->
+        <div id="attendance-tab" class="tab-content">
+            <div class="formula-box">
+                <strong>Attendance Formula:</strong> Attendance % = (Classes Attended / Total Classes) × 100
+            </div>
+            
+            <div class="main-content">
+                <div class="input-section">
+                    <h2 class="section-title">Enter Attendance Details</h2>
+                    
+                    <div class="attendance-input-section">
+                        <div class="input-group">
+                            <div class="input-field">
+                                <label>Classes Attended</label>
+                                <input type="number" id="attendedClasses" min="0" placeholder="e.g., 45" oninput="calculateAttendance()">
+                            </div>
+                            <div class="input-field">
+                                <label>Total Classes</label>
+                                <input type="number" id="totalClasses" min="1" placeholder="e.g., 60" oninput="calculateAttendance()">
+                            </div>
+                        </div>
+                        
+                        <div class="input-group" style="margin-top: 15px;">
+                            <div class="input-field">
+                                <label>Minimum Required % (Default: 75%)</label>
+                                <input type="number" id="minPercent" min="0" max="100" value="75" step="0.1" placeholder="75" oninput="calculateAttendance()">
+                            </div>
+                            <div class="input-field">
+                                <label>Subject Name (Optional)</label>
+                                <input type="text" id="subjectName" placeholder="e.g., Mathematics">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button class="btn btn-success" onclick="calculateAttendance()">Calculate Attendance</button>
+                        <button class="btn btn-warning" onclick="addAttendanceRecord()">Save Record</button>
+                        <button class="btn btn-secondary" onclick="resetAttendanceCalculator()">Reset</button>
+                    </div>
+                </div>
+
+                <div class="result-section">
+                    <h2 class="section-title">Attendance Status</h2>
+                    <div id="attendanceResultsContainer">
+                        <div class="empty-state">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                            </svg>
+                            <p>Enter your attendance details to see your status and recommendations</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <footer class="footer">
+        <p>&copy; hasselx</p>
+    </footer>
+
     <script>
         let semesterCount = 1;
+        let attendanceRecords = [];
 
+        function switchTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName + '-tab').classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+
+        // CGPA Calculator Functions
         function addSemester() {
             semesterCount++;
             const container = document.getElementById('semestersContainer');
@@ -476,7 +797,7 @@
             });
             
             if (validSemesters.length === 0) {
-                showError('Please enter valid SGPA and Credits for at least one semester');
+                showCGPAError('Please enter valid SGPA and Credits for at least one semester');
                 return;
             }
             
@@ -489,23 +810,23 @@
             });
             
             const cgpa = totalWeightedPoints / totalCredits;
-            const gpa4Scale = ((cgpa - 5) * 4 / 5);
+            const gpa4Scale = Math.max(0, (cgpa - 5) * 4 / 5);
             const gpa5Scale = cgpa / 2;
             
-            showResults(cgpa, gpa4Scale, gpa5Scale, totalWeightedPoints, totalCredits, validSemesters);
+            showCGPAResults(cgpa, gpa4Scale, gpa5Scale, totalWeightedPoints, totalCredits, validSemesters);
         }
 
-        function showError(message) {
-            const resultsContainer = document.getElementById('resultsContainer');
+        function showCGPAError(message) {
+            const resultsContainer = document.getElementById('cgpaResultsContainer');
             resultsContainer.innerHTML = `
                 <div class="error-message">
-                    ${message}
+                    <strong>Error:</strong> ${message}
                 </div>
             `;
         }
 
-        function showResults(cgpa, gpa4Scale, gpa5Scale, totalWeightedPoints, totalCredits, validSemesters) {
-            const resultsContainer = document.getElementById('resultsContainer');
+        function showCGPAResults(cgpa, gpa4Scale, gpa5Scale, totalWeightedPoints, totalCredits, validSemesters) {
+            const resultsContainer = document.getElementById('cgpaResultsContainer');
             
             let calculationRows = '';
             validSemesters.forEach(sem => {
@@ -522,7 +843,7 @@
             resultsContainer.innerHTML = `
                 <div class="result-card">
                     <h3>Your CGPA</h3>
-                    <div class="cgpa-value">${cgpa.toFixed(2)}</div>
+                    <div class="value">${cgpa.toFixed(2)}</div>
                     <div class="scale-info">Out of 10.00</div>
                 </div>
                 
@@ -531,7 +852,7 @@
                     <div class="scaling-grid">
                         <div class="scale-card">
                             <div class="scale-title">4.0 Scale (US)</div>
-                            <div class="scale-value">${Math.max(0, gpa4Scale).toFixed(2)}</div>
+                            <div class="scale-value">${gpa4Scale.toFixed(2)}</div>
                             <div class="scale-formula">Formula: (CGPA - 5) × 4 / 5</div>
                         </div>
                         <div class="scale-card">
@@ -540,7 +861,7 @@
                             <div class="scale-formula">Formula: CGPA / 2</div>
                         </div>
                     </div>
-                    <div style="font-size: 0.8rem; color: #6c757d; text-align: center;">
+                    <div style="font-size: 0.8rem; color: #6c757d; text-align: center; margin-top: 10px;">
                         <strong>Note:</strong> These are approximate conversions. Different institutions may use different scaling methods.
                     </div>
                 </div>
@@ -589,7 +910,7 @@
             }).join('');
         }
 
-        function resetCalculator() {
+        function resetCGPACalculator() {
             semesterCount = 1;
             const container = document.getElementById('semestersContainer');
             container.innerHTML = `
@@ -610,7 +931,7 @@
                 </div>
             `;
             
-            const resultsContainer = document.getElementById('resultsContainer');
+            const resultsContainer = document.getElementById('cgpaResultsContainer');
             resultsContainer.innerHTML = `
                 <div class="empty-state">
                     <svg viewBox="0 0 24 24" fill="currentColor">
@@ -620,6 +941,254 @@
                 </div>
             `;
         }
+
+        // Attendance Calculator Functions
+        function calculateAttendance() {
+            const attendedClasses = parseInt(document.getElementById('attendedClasses').value) || 0;
+            const totalClasses = parseInt(document.getElementById('totalClasses').value) || 0;
+            const minRequiredPercent = parseFloat(document.getElementById('minPercent').value) || 75;
+            const subjectName = document.getElementById('subjectName').value || 'Current Subject';
+
+            if (totalClasses === 0) {
+                showAttendanceError('Please enter a valid number of total classes');
+                return;
+            }
+
+            if (attendedClasses > totalClasses) {
+                showAttendanceError('Attended classes cannot be more than total classes');
+                return;
+            }
+
+            const currentPercent = (attendedClasses / totalClasses) * 100;
+            const results = attendanceStatus(attendedClasses, totalClasses, minRequiredPercent, subjectName);
+            
+            showAttendanceResults(results);
+        }
+
+        function attendanceStatus(attendedClasses, totalClasses, minRequiredPercent = 75, subjectName = 'Current Subject') {
+            const currentPercent = (attendedClasses / totalClasses) * 100;
+            
+            let status = 'safe';
+            let message = '';
+            let recommendation = '';
+            let futureClasses = 0;
+            let canSkip = 0;
+            
+            if (currentPercent >= minRequiredPercent) {
+                status = 'safe';
+                message = `✅ You are safe! Your attendance is above the required ${minRequiredPercent}%.`;
+                
+                // Calculate how many classes can be skipped while maintaining minimum
+                let tempTotal = totalClasses;
+                let tempAttended = attendedClasses;
+                
+                while (true) {
+                    tempTotal++;
+                    if ((tempAttended / tempTotal) * 100 >= minRequiredPercent) {
+                        canSkip++;
+                    } else {
+                        break;
+                    }
+                }
+                
+                if (canSkip > 0) {
+                    recommendation = `🎯 You can skip up to ${canSkip} upcoming classes and still maintain ${minRequiredPercent}% attendance.`;
+                }
+            } else {
+                status = 'danger';
+                message = `⚠️ Warning! Your attendance is below the required ${minRequiredPercent}%.`;
+                
+                // Calculate required future classes
+                futureClasses = 0;
+                while (true) {
+                    const futureTotal = totalClasses + futureClasses;
+                    const futureAttended = attendedClasses + futureClasses;
+                    const futurePercent = (futureAttended / futureTotal) * 100;
+                    
+                    if (futurePercent >= minRequiredPercent) {
+                        break;
+                    }
+                    futureClasses++;
+                }
+                
+                recommendation = `📚 You need to attend the next ${futureClasses} classes without missing any to reach ${minRequiredPercent}% attendance.`;
+            }
+            
+            return {
+                currentPercent,
+                status,
+                message,
+                recommendation,
+                futureClasses,
+                canSkip,
+                attendedClasses,
+                totalClasses,
+                minRequiredPercent,
+                subjectName
+            };
+        }
+
+        function showAttendanceError(message) {
+            const resultsContainer = document.getElementById('attendanceResultsContainer');
+            resultsContainer.innerHTML = `
+                <div class="error-message">
+                    <strong>Error:</strong> ${message}
+                </div>
+            `;
+        }
+
+        function showAttendanceResults(results) {
+            const resultsContainer = document.getElementById('attendanceResultsContainer');
+            
+            let progressClass = 'success';
+            let cardClass = 'result-card';
+            
+            if (results.currentPercent < results.minRequiredPercent) {
+                progressClass = 'danger';
+                cardClass = 'result-card' + ' ' + 'danger';
+            } else if (results.currentPercent < results.minRequiredPercent + 10) {
+                progressClass = 'warning';
+            }
+            
+            const progressStyle = results.currentPercent < results.minRequiredPercent ? 
+                'background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);' : 
+                'background: linear-gradient(135deg, #28a745 0%, #20c997 100%);';
+            
+            resultsContainer.innerHTML = `
+                <div class="result-card" style="${results.currentPercent < results.minRequiredPercent ? 'background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);' : ''}">
+                    <h3>Current Attendance</h3>
+                    <div class="value">${results.currentPercent.toFixed(2)}%</div>
+                    <div class="scale-info">${results.attendedClasses} out of ${results.totalClasses} classes</div>
+                </div>
+                
+                <div class="attendance-stats">
+                    <div class="stat-card">
+                        <div class="stat-value">${results.attendedClasses}</div>
+                        <div class="stat-label">Classes Attended</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${results.totalClasses}</div>
+                        <div class="stat-label">Total Classes</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${results.minRequiredPercent}%</div>
+                        <div class="stat-label">Required Minimum</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${results.totalClasses - results.attendedClasses}</div>
+                        <div class="stat-label">Classes Missed</div>
+                    </div>
+                </div>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill ${progressClass}" style="width: ${Math.min(results.currentPercent, 100)}%"></div>
+                </div>
+                
+                <div class="${results.status === 'safe' ? 'success-message' : 'warning-message'}">
+                    <strong>${results.message}</strong>
+                    ${results.recommendation ? `<br><br>${results.recommendation}` : ''}
+                </div>
+                
+                <div class="calculation-details">
+                    <h4 style="margin-bottom: 15px; font-weight: 600;">Detailed Analysis</h4>
+                    <div class="calculation-row">
+                        <span>Current Attendance:</span>
+                        <span>${results.attendedClasses} ÷ ${results.totalClasses} = ${results.currentPercent.toFixed(2)}%</span>
+                    </div>
+                    <div class="calculation-row">
+                        <span>Required Minimum:</span>
+                        <span>${results.minRequiredPercent}%</span>
+                    </div>
+                    <div class="calculation-row">
+                        <span>Status:</span>
+                        <span style="color: ${results.status === 'safe' ? '#28a745' : '#dc3545'}; font-weight: 600;">
+                            ${results.status === 'safe' ? 'SAFE ✅' : 'AT RISK ⚠️'}
+                        </span>
+                    </div>
+                    ${results.futureClasses > 0 ? `
+                    <div class="calculation-row">
+                        <span>Classes to attend consecutively:</span>
+                        <span style="color: #fd7e14; font-weight: 600;">${results.futureClasses}</span>
+                    </div>
+                    ` : ''}
+                    ${results.canSkip > 0 ? `
+                    <div class="calculation-row">
+                        <span>Classes you can skip:</span>
+                        <span style="color: #28a745; font-weight: 600;">${results.canSkip}</span>
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        function addAttendanceRecord() {
+            const attendedClasses = parseInt(document.getElementById('attendedClasses').value) || 0;
+            const totalClasses = parseInt(document.getElementById('totalClasses').value) || 0;
+            const minRequiredPercent = parseFloat(document.getElementById('minPercent').value) || 75;
+            const subjectName = document.getElementById('subjectName').value || 'Unnamed Subject';
+            
+            if (totalClasses === 0) {
+                showAttendanceError('Please enter valid attendance data before saving');
+                return;
+            }
+            
+            const record = {
+                id: Date.now(),
+                subjectName,
+                attendedClasses,
+                totalClasses,
+                percentage: (attendedClasses / totalClasses) * 100,
+                minRequiredPercent,
+                date: new Date().toLocaleDateString()
+            };
+            
+            attendanceRecords.push(record);
+            
+            // Show success message
+            const resultsContainer = document.getElementById('attendanceResultsContainer');
+            const currentContent = resultsContainer.innerHTML;
+            resultsContainer.innerHTML = `
+                <div class="success-message">
+                    <strong>Record Saved!</strong> ${subjectName} attendance record has been saved successfully.
+                </div>
+            ` + currentContent;
+            
+            // Clear subject name field
+            document.getElementById('subjectName').value = '';
+        }
+
+        function resetAttendanceCalculator() {
+            document.getElementById('attendedClasses').value = '';
+            document.getElementById('totalClasses').value = '';
+            document.getElementById('minPercent').value = '75';
+            document.getElementById('subjectName').value = '';
+            
+            const resultsContainer = document.getElementById('attendanceResultsContainer');
+            resultsContainer.innerHTML = `
+                <div class="empty-state">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    <p>Enter your attendance details to see your status and recommendations</p>
+                </div>
+            `;
+        }
+
+        // Auto-calculate attendance when inputs change
+        document.addEventListener('DOMContentLoaded', function() {
+            const attendanceInputs = ['attendedClasses', 'totalClasses', 'minPercent'];
+            attendanceInputs.forEach(id => {
+                const input = document.getElementById(id);
+                if (input) {
+                    input.addEventListener('input', function() {
+                        if (document.getElementById('attendedClasses').value && 
+                            document.getElementById('totalClasses').value) {
+                            calculateAttendance();
+                        }
+                    });
+                }
+            });
+        });
     </script>
 </body>
 </html>
