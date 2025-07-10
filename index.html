@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CGPA Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .formula-box {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            min-height: 600px;
+        }
+
+        .input-section {
+            padding: 30px;
+            background: #f8f9fa;
+            border-right: 1px solid #e9ecef;
+        }
+
+        .result-section {
+            padding: 30px;
+            background: white;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .semester-card {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .semester-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .semester-title {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .delete-btn:hover {
+            background: #c82333;
+        }
+
+        .input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .input-field {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-field label {
+            font-weight: 500;
+            margin-bottom: 5px;
+            color: #495057;
+        }
+
+        .input-field input {
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .input-field input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .result-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .result-card .cgpa-value {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .result-card .scale-info {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        .scaling-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .scaling-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .scale-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            text-align: center;
+        }
+
+        .scale-title {
+            font-weight: 600;
+            color: #6f42c1;
+            margin-bottom: 5px;
+        }
+
+        .scale-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #495057;
+            margin-bottom: 5px;
+        }
+
+        .scale-formula {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+
+        .calculation-details {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .calculation-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .calculation-row:last-child {
+            border-bottom: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            border-top: 2px solid #dee2e6;
+            padding-top: 12px;
+        }
+
+        .grade-classification {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .grade-item {
+            padding: 5px 0;
+            transition: all 0.3s;
+        }
+
+        .grade-item.active {
+            font-weight: 700;
+            color: #28a745;
+            background: rgba(40, 167, 69, 0.1);
+            padding: 8px 12px;
+            border-radius: 5px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        .semesters-container {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .semesters-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .semesters-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .semesters-container::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+
+        .semesters-container::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #f5c6cb;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .input-section {
+                border-right: none;
+                border-bottom: 1px solid #e9ecef;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .scaling-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>CGPA Calculator</h1>
+            <p>Calculate your Cumulative Grade Point Average using weighted formula</p>
+            <div class="formula-box">
+                <strong>Formula:</strong> CGPA = Σ(SGPA × Credits) / Σ(Credits)
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="input-section">
+                <h2 class="section-title">Enter Semester Details</h2>
+                
+                <div class="semesters-container" id="semestersContainer">
+                    <div class="semester-card" data-id="1">
+                        <div class="semester-header">
+                            <span class="semester-title">Semester 1</span>
+                        </div>
+                        <div class="input-group">
+                            <div class="input-field">
+                                <label>SGPA</label>
+                                <input type="number" step="0.01" min="0" max="10" placeholder="e.g., 8.37" class="sgpa-input">
+                            </div>
+                            <div class="input-field">
+                                <label>Credits</label>
+                                <input type="number" step="1" min="0" placeholder="e.g., 23" class="credits-input">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="addSemester()">+ Add Semester</button>
+                    <button class="btn btn-success" onclick="calculateCGPA()">Calculate CGPA</button>
+                    <button class="btn btn-secondary" onclick="resetCalculator()">Reset</button>
+                </div>
+            </div>
+
+            <div class="result-section">
+                <h2 class="section-title">Results</h2>
+                <div id="resultsContainer">
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                        </svg>
+                        <p>Enter your semester details and click "Calculate CGPA" to see your results</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let semesterCount = 1;
+
+        function addSemester() {
+            semesterCount++;
+            const container = document.getElementById('semestersContainer');
+            const semesterCard = document.createElement('div');
+            semesterCard.className = 'semester-card';
+            semesterCard.setAttribute('data-id', semesterCount);
+            
+            semesterCard.innerHTML = `
+                <div class="semester-header">
+                    <span class="semester-title">Semester ${semesterCount}</span>
+                    <button class="delete-btn" onclick="removeSemester(${semesterCount})">Delete</button>
+                </div>
+                <div class="input-group">
+                    <div class="input-field">
+                        <label>SGPA</label>
+                        <input type="number" step="0.01" min="0" max="10" placeholder="e.g., 8.37" class="sgpa-input">
+                    </div>
+                    <div class="input-field">
+                        <label>Credits</label>
+                        <input type="number" step="1" min="0" placeholder="e.g., 23" class="credits-input">
+                    </div>
+                </div>
+            `;
+            
+            container.appendChild(semesterCard);
+        }
+
+        function removeSemester(id) {
+            const semesterCards = document.querySelectorAll('.semester-card');
+            if (semesterCards.length > 1) {
+                const semesterCard = document.querySelector(`[data-id="${id}"]`);
+                if (semesterCard) {
+                    semesterCard.remove();
+                }
+            }
+        }
+
+        function calculateCGPA() {
+            const semesterCards = document.querySelectorAll('.semester-card');
+            const validSemesters = [];
+            
+            semesterCards.forEach((card, index) => {
+                const sgpaInput = card.querySelector('.sgpa-input');
+                const creditsInput = card.querySelector('.credits-input');
+                const sgpa = parseFloat(sgpaInput.value);
+                const credits = parseFloat(creditsInput.value);
+                
+                if (!isNaN(sgpa) && !isNaN(credits) && sgpa > 0 && credits > 0) {
+                    validSemesters.push({
+                        name: `Semester ${index + 1}`,
+                        sgpa: sgpa,
+                        credits: credits,
+                        weightedPoints: sgpa * credits
+                    });
+                }
+            });
+            
+            if (validSemesters.length === 0) {
+                showError('Please enter valid SGPA and Credits for at least one semester');
+                return;
+            }
+            
+            let totalWeightedPoints = 0;
+            let totalCredits = 0;
+            
+            validSemesters.forEach(sem => {
+                totalWeightedPoints += sem.weightedPoints;
+                totalCredits += sem.credits;
+            });
+            
+            const cgpa = totalWeightedPoints / totalCredits;
+            const gpa4Scale = ((cgpa - 5) * 4 / 5);
+            const gpa5Scale = cgpa / 2;
+            
+            showResults(cgpa, gpa4Scale, gpa5Scale, totalWeightedPoints, totalCredits, validSemesters);
+        }
+
+        function showError(message) {
+            const resultsContainer = document.getElementById('resultsContainer');
+            resultsContainer.innerHTML = `
+                <div class="error-message">
+                    ${message}
+                </div>
+            `;
+        }
+
+        function showResults(cgpa, gpa4Scale, gpa5Scale, totalWeightedPoints, totalCredits, validSemesters) {
+            const resultsContainer = document.getElementById('resultsContainer');
+            
+            let calculationRows = '';
+            validSemesters.forEach(sem => {
+                calculationRows += `
+                    <div class="calculation-row">
+                        <span>${sem.name}:</span>
+                        <span>${sem.sgpa} × ${sem.credits} = ${sem.weightedPoints.toFixed(2)}</span>
+                    </div>
+                `;
+            });
+            
+            const gradeClassification = getGradeClassification(cgpa);
+            
+            resultsContainer.innerHTML = `
+                <div class="result-card">
+                    <h3>Your CGPA</h3>
+                    <div class="cgpa-value">${cgpa.toFixed(2)}</div>
+                    <div class="scale-info">Out of 10.00</div>
+                </div>
+                
+                <div class="scaling-section">
+                    <h4 style="margin-bottom: 15px; font-weight: 600;">CGPA Scaling</h4>
+                    <div class="scaling-grid">
+                        <div class="scale-card">
+                            <div class="scale-title">4.0 Scale (US)</div>
+                            <div class="scale-value">${Math.max(0, gpa4Scale).toFixed(2)}</div>
+                            <div class="scale-formula">Formula: (CGPA - 5) × 4 / 5</div>
+                        </div>
+                        <div class="scale-card">
+                            <div class="scale-title">5.0 Scale</div>
+                            <div class="scale-value">${gpa5Scale.toFixed(2)}</div>
+                            <div class="scale-formula">Formula: CGPA / 2</div>
+                        </div>
+                    </div>
+                    <div style="font-size: 0.8rem; color: #6c757d; text-align: center;">
+                        <strong>Note:</strong> These are approximate conversions. Different institutions may use different scaling methods.
+                    </div>
+                </div>
+                
+                <div class="calculation-details">
+                    <h4 style="margin-bottom: 15px; font-weight: 600;">Calculation Breakdown</h4>
+                    ${calculationRows}
+                    <div class="calculation-row">
+                        <span>Total Weighted Points:</span>
+                        <span>${totalWeightedPoints.toFixed(2)}</span>
+                    </div>
+                    <div class="calculation-row">
+                        <span>Total Credits:</span>
+                        <span>${totalCredits}</span>
+                    </div>
+                    <div class="calculation-row">
+                        <span>CGPA:</span>
+                        <span>${totalWeightedPoints.toFixed(2)} ÷ ${totalCredits} = ${cgpa.toFixed(2)}</span>
+                    </div>
+                </div>
+                
+                <div class="grade-classification">
+                    <h4 style="margin-bottom: 15px; font-weight: 600;">Grade Classification (10.0 Scale)</h4>
+                    ${gradeClassification}
+                </div>
+            `;
+        }
+
+        function getGradeClassification(cgpa) {
+            const grades = [
+                { range: '9.5 - 10.0', label: 'Outstanding', min: 9.5, max: 10.0 },
+                { range: '8.5 - 9.4', label: 'Excellent', min: 8.5, max: 9.4 },
+                { range: '7.5 - 8.4', label: 'Very Good', min: 7.5, max: 8.4 },
+                { range: '6.5 - 7.4', label: 'Good', min: 6.5, max: 7.4 },
+                { range: '5.5 - 6.4', label: 'Average', min: 5.5, max: 6.4 },
+                { range: 'Below 5.5', label: 'Below Average', min: 0, max: 5.4 }
+            ];
+            
+            return grades.map(grade => {
+                const isActive = cgpa >= grade.min && cgpa <= grade.max;
+                return `
+                    <div class="grade-item ${isActive ? 'active' : ''}">
+                        ${grade.range}: ${grade.label}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function resetCalculator() {
+            semesterCount = 1;
+            const container = document.getElementById('semestersContainer');
+            container.innerHTML = `
+                <div class="semester-card" data-id="1">
+                    <div class="semester-header">
+                        <span class="semester-title">Semester 1</span>
+                    </div>
+                    <div class="input-group">
+                        <div class="input-field">
+                            <label>SGPA</label>
+                            <input type="number" step="0.01" min="0" max="10" placeholder="e.g., 8.37" class="sgpa-input">
+                        </div>
+                        <div class="input-field">
+                            <label>Credits</label>
+                            <input type="number" step="1" min="0" placeholder="e.g., 23" class="credits-input">
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            const resultsContainer = document.getElementById('resultsContainer');
+            resultsContainer.innerHTML = `
+                <div class="empty-state">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                    </svg>
+                    <p>Enter your semester details and click "Calculate CGPA" to see your results</p>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
